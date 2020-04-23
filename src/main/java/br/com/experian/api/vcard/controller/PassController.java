@@ -35,7 +35,7 @@ public class PassController {
 		// means
 		PassRequest passRequest = new PassRequest("Lucas", "Abreu", "123", "12", "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.facebook.com%2Fpages%2FImagens-tumblr%2F1316298318394242&psig=AOvVaw3Grw_kHBmGcUENZ0QQGi2s&ust=1586011687139000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCJCAxI_AzOgCFQAAAAAdAAAAABAD");
 
-		byte[] pkpassFile = applePassServiceImpl.createPasskit(passRequest);
+		byte[] pkpassFile = applePassServiceImpl.createPass(passRequest);
 
 		// Prepare response to start download
 		response.setStatus(200);

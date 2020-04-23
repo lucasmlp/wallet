@@ -22,6 +22,14 @@ public class PassRequest {
 		this.name = name;
 	}
 
+	public PassRequest(String firstName, String lastName, String uuid, String uniqueID, String imageURL) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.uuid = uuid;
+		this.uniqueID = uniqueID;
+		this.imageURL = imageURL;
+	}
+
 	public String getFirstName() {
 		return firstName;
 	}

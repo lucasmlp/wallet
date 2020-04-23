@@ -58,6 +58,12 @@ public class ApplePassServiceImpl {
     
     /** The name of secondary header of the pass */
     private final String secondaryHeader = "Unique ID";
+
+    /** The name of secondary field of the pass */
+    private final String auxiliaryFieldName = "Phones";
+
+    /** The name of secondary header of the pass */
+    private final String auxiliaryHeader = "Phones";
     
     /** The name of organization issuing the pass */
     private final String orgName = "YOUR_ORG_NAME";
@@ -78,27 +84,26 @@ public class ApplePassServiceImpl {
      * @return byte array representing the zipped archive of apple passkit
      */
      
-     public byte[] createPasskit(PassRequest passRequest) {
-        
-        String firstName = passRequest.getFirstName();
-        String lastName = passRequest.getLastName();
+     public byte[] createPass(PassRequest passRequest, String clientId) {
+
         String fullName = passRequest.getName();
-        String delim = " ";
-        
+        String email = passRequest.getEmail();
+        String phones = passRequest.getPhones().toArray()[0] + " " +passRequest.getPhones().toArray()[1];
+
         PKPass pass = new PKPass();
-        
         PKGenericPass gp = new PKGenericPass();
-        
-        // name, label, value
-        PKField primaryField = new PKField(primaryFieldName, primaryHeader, firstName + delim + lastName);
-        PKField secondaryField = new PKField(secondaryFieldName, secondaryHeader, passRequest.getUniqueID());
+
+        PKField primaryField = new PKField(primaryFieldName, primaryHeader, fullName);
+        PKField secondaryField = new PKField(secondaryFieldName, secondaryHeader, email);
+        PKField auxiliaryField = new PKField(auxiliaryFieldName, auxiliaryHeader, phones);
         gp.addPrimaryField(primaryField);
         gp.addSecondaryField(secondaryField);
+        gp.addAuxiliaryField(auxiliaryField);
         
         PKBarcode barcode = new PKBarcode();
         barcode.setFormat(PKBarcodeFormat.PKBarcodeFormatQR);
-        barcode.setMessage(passRequest.getUuid().toString());
-        barcode.setMessageEncoding(Charset.forName("utf-8"));
+//        barcode.setMessage(passRequest.getUuid().toString());
+//        barcode.setMessageEncoding(Charset.forName("utf-8"));
         List<PKBarcode> barcodeList = new ArrayList<PKBarcode>();
         barcodeList.add(barcode);
         
@@ -121,10 +126,10 @@ public class ApplePassServiceImpl {
                 InputStream iconFile = classLoader.getResourceAsStream(logoIconFileName);
                 URL url = new URL(passRequest.getImageURL());
                 
-                //pkPassTemplateInMemory.addFile(PKPassTemplateInMemory.PK_ICON, logoFile);
-                //pkPassTemplateInMemory.addFile(PKPassTemplateInMemory.PK_ICON_RETINA, logoFile);
-                //pkPassTemplateInMemory.addFile(PKPassTemplateInMemory.PK_LOGO, logoFile);
-                //pkPassTemplateInMemory.addFile(PKPassTemplateInMemory.PK_LOGO_RETINA, logoFile);
+                pkPassTemplateInMemory.addFile(PKPassTemplateInMemory.PK_ICON, iconFile);
+                pkPassTemplateInMemory.addFile(PKPassTemplateInMemory.PK_ICON_RETINA, iconFile);
+                pkPassTemplateInMemory.addFile(PKPassTemplateInMemory.PK_LOGO, logoFile);
+                pkPassTemplateInMemory.addFile(PKPassTemplateInMemory.PK_LOGO_RETINA, logoFile);
                 pkPassTemplateInMemory.addFile(PKPassTemplateInMemory.PK_THUMBNAIL, url);
                 pkPassTemplateInMemory.addFile(PKPassTemplateInMemory.PK_THUMBNAIL_RETINA, url);
                 
